@@ -1,0 +1,36 @@
+[
+	{
+		"serverID": "123456789",
+		"Name": "Example Server Name",
+		"color": 16494651,
+		"publicWebhooks": [
+			"https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks"
+		],
+		"staffWebhooks": [
+			"https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks"
+		],
+		"embedSettings": {
+			"minifyEmbed": true,
+			"EmbedBotName": "My Rust Server Bans",
+			"EmbedAvatar": "https://imgur.com/WeXGthm.png"
+		},
+		"bm_token": "Your BattleMetrics Token goes here. See the Read ME for more information"
+	},
+	{
+		"serverID": "12345678",
+		"Name": "Example Server Name",
+		"color": 12658477,
+		"publicWebhooks": [
+			"https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks"
+		],
+		"staffWebhooks": [
+			"https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks"
+		],
+		"embedSettings": {
+			"minifyEmbed": true,
+			"EmbedBotName": "My Rust Server Bans",
+			"EmbedAvatar": "https://imgur.com/gCPIwr9.png"
+		},
+		"bm_token": "Your BattleMetrics Token goes here. See the Read ME for more information"
+	}
+]
