@@ -12,6 +12,5 @@ steam_Emoji = '😊'
 battlemetrics_Emoji = '😇'
 expiry_Emoji = '😏'
 
-### Experiencing Issues? ###
-debugging_problems = False
-# Turn this False to True to enable some debugging features designed to help find issues!
+## Version
+# 1.1.0

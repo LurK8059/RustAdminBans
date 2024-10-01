@@ -41,10 +41,16 @@ async def track_bans():
                 knownBansArray.append(line)
                 logFile.close
         
+        # Check to ensure Bearer is present in the auth token field
+        if not server['bm_token'].startswith('Bearer '):
+            bm_token = f"Bearer {server['bm_token']}"
+        else:
+            bm_token = server['bm_token']
+            
         # make call to BM and return data
         url = "https://api.battlemetrics.com/bans"
         headers = {'content-type': 'application/json',
-                   'Accept-Charset': 'UTF-8', 'Authorization': server['bm_token']}
+                   'Accept-Charset': 'UTF-8', 'Authorization': bm_token}
 
         async with aiohttp.ClientSession() as session:
             data = await fetch(url, headers, session)
@@ -53,35 +59,45 @@ async def track_bans():
         try:
             for ban in data['data']:
                     if ban['type'] == "ban" and ban['id'] not in knownBansArray and ban['relationships']['server']['data']['id'] == server['serverID']:
-                        banObject = {}
-                        banObject['playerName'] = (ban['meta']['player'][:150] + ' (truncated)') if len(ban['meta']['player']) > 150 else ban['meta']['player']
-                        for identifier in ban['attributes']['identifiers']:
-                            if identifier['type'] == "steamID":
-                                banObject['steamID'] = identifier['identifier']
-                                if not (identifier.get('metadata') is None):
-                                    banObject['avatar'] = identifier['metadata']['profile']['avatarmedium']
-                                else:
-                                    banObject['avatar'] = "https://i.gyazo.com/2b4181769d85f5adb53694bf156d665c.png"
-                        banObject['reason'] = (ban['attributes']['reason'][:2000] + ' (truncated)') if len(ban['attributes']['reason']) > 2000 else ban['attributes']['reason']
-                        banObject['reason'] = banObject['reason'].replace("{", "⁍").replace("}", "⁍")
-                        banObject['reason'] = banObject['reason'].replace("⁍⁍timeLeft⁍⁍", "").replace("⁍⁍duration⁍⁍", "")
-                        if ban['attributes']['expires'] == None:
-                            banObject['banLength'] = "Never - Perm Banned"
+                        if not 'meta' in ban:
+                            if ban['attributes']['identifiers'][0]['manual']:
+                                print('Warning: Manual Ban Detected. Do not use this function: https://gyazo.com/aaa5f057c174265e69a5b17a50fe0800')
+                                print('Contact your developer or the author of this bot for further support.')
+                            else:
+                                print('Malformed Response from Battlemetrics')
                         else:
-                            banLength = time.strptime(
-                                ban['attributes']['expires'], "%Y-%m-%dT%H:%M:%S.%fZ")
-                            banLength = time.mktime(banLength)
-                            banObject['banLength'] = datetime.utcfromtimestamp(
-                                banLength).strftime('%a %b %d %Y')
-                        banObject['banid'] = ban['id']
-                        banObject['playerDataID'] = ban['relationships']['player']['data']['id']
-                        banObject['staffBanNote'] = re.sub("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", r"[Removed IP]", ban['attributes']['note'])
-
-                        messageHandler.sendEmbed(banObject, server)
-                        messageHandler.sendStaffEmbed(banObject, server)
-                        with open('bans/{}.log'.format(server['serverID']), "a") as logFile:
-                            logFile.write('{}\n'.format(ban['id']))
-                            logFile.close
+                            banObject = {}
+                            banObject['playerName'] = (ban['meta']['player'][:150] + ' (truncated)') if len(ban['meta']['player']) > 150 else ban['meta']['player']
+                            for identifier in ban['attributes']['identifiers']:
+                                if identifier['type'] == "steamID":
+                                    banObject['steamID'] = identifier['identifier']
+                                    if not (identifier.get('metadata') is None):
+                                        banObject['avatar'] = identifier['metadata']['profile']['avatarmedium']
+                                    else:
+                                        banObject['avatar'] = "https://i.gyazo.com/2b4181769d85f5adb53694bf156d665c.png"
+                            banObject['reason'] = (ban['attributes']['reason'][:2000] + ' (truncated)') if len(ban['attributes']['reason']) > 2000 else ban['attributes']['reason']
+                            banObject['reason'] = banObject['reason'].replace("{", "⁍").replace("}", "⁍")
+                            banObject['reason'] = banObject['reason'].replace("⁍⁍timeLeft⁍⁍", "").replace("⁍⁍duration⁍⁍", "")
+                            if ban['attributes']['expires'] == None:
+                                banObject['banLength'] = "Never - Perm Banned"
+                            else:
+                                banLength = time.strptime(
+                                    ban['attributes']['expires'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                                banLength = time.mktime(banLength)
+                                banObject['banLength'] = datetime.utcfromtimestamp(
+                                    banLength).strftime('%a %b %d %Y')
+                            banObject['banid'] = ban['id']
+                            banObject['playerDataID'] = ban['relationships']['player']['data']['id']
+                            note = ban['attributes']['note']
+                            note = re.sub(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", r"[Removed IP]", note)  # Remove IPs and replace with [Removed IP]
+                            note = re.sub(r"<[^>]*>", r" ", note)  # Remove HTML Tags
+                            banObject['staffBanNote'] = note
+                            
+                            messageHandler.sendEmbed(banObject, server)
+                            messageHandler.sendStaffEmbed(banObject, server)
+                            with open('bans/{}.log'.format(server['serverID']), "a") as logFile:
+                                logFile.write('{}\n'.format(ban['id']))
+                                logFile.close
         except Exception as e:
             print("Unable to process ban (BM Error) for server {} Error: {}".format(server['Name'], e))
 
