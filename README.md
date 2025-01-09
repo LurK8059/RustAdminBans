@@ -13,9 +13,9 @@ In a terminal navigate to the install directory and run pip install -r requireme
 
 ### Manual dependencies installation
 The dependencies needed to get your bot online are stated in the main.py. You can install them using pip install <name>. Here they are now:
-- discord
-- re
-- aiohttp
+- discord.py==2.1.0
+- requests==2.25.1
+- aiohttp==3.9.5
 
 ### For any further support or enquires join:
 - [discord.lone.design](https://discord.lone.design/)
