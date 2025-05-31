@@ -33,6 +33,12 @@ def sendEmbed(banObject, serverObject):
             "username": serverObject['embedSettings']['EmbedBotName'],
             "avatar_url": serverObject['embedSettings']['EmbedAvatar']
         }
+        
+        if serverObject['embedSettings']['useSteamID'] == True:
+                banned_player_profile = "[{}](https://steamcommunity.com/profiles/{}) - {}".format(banObject['playerName'], banObject['steamID'], banObject['steamID'])
+        else:
+            banned_player_profile = f"{banObject['playerName']}"
+
         if serverObject['embedSettings']['minifyEmbed'] == True:
             data["embeds"] = [
                 {
@@ -41,14 +47,14 @@ def sendEmbed(banObject, serverObject):
                     "fields": [
                         {
                         "name": config.steam_Emoji + " Banned Player",
-                        "value": "[{}](https://steamcommunity.com/profiles/{}) - {}".format(banObject['playerName'], banObject['steamID'], banObject['steamID'])
+                        "value": banned_player_profile
                         },
                         {
                         "name": "Reason",
                         "value": banObject['reason'],
                         "inline": True
                         },
-                         {
+                        {
                         "name": "\u200b",
                         "value": "\u200b",
                         "inline": True
@@ -73,7 +79,7 @@ def sendEmbed(banObject, serverObject):
                     "fields": [
                         {
                         "name": "Banned Player",
-                        "value": "[{}](https://steamcommunity.com/profiles/{}) - {}".format(banObject['playerName'], banObject['steamID'], banObject['steamID'])
+                        "value": banned_player_profile
                         },
                         {
                         "name": "Expiry",
@@ -104,6 +110,14 @@ def sendStaffEmbed(banObject, serverObject):
             "username": serverObject['embedSettings']['EmbedBotName'],
             "avatar_url": serverObject['embedSettings']['EmbedAvatar']
         }
+        
+        if serverObject['embedSettings']['useSteamID'] == True:
+                banned_player_profile = "[{}](https://steamcommunity.com/profiles/{}) - {}".format(banObject['playerName'], banObject['steamID'], banObject['steamID'])
+                banned_player_simplier_profile = f"{banObject['playerName']} - {banObject['steamID']}"
+        else:
+            banned_player_profile = f"{banObject['playerName']}"
+            banned_player_simplier_profile = f"{banObject['playerName']}"
+        
         data["embeds"] = [
                 {
                     "color":  serverObject['color'],
@@ -114,7 +128,7 @@ def sendStaffEmbed(banObject, serverObject):
                     "fields": [
                         {
                         "name": "Player Information",
-                        "value": "{} - {}\n\u200b".format(banObject['playerName'], banObject['steamID']),
+                        "value": banned_player_simplier_profile,
                         "inline": False
                         },
                         {
@@ -129,7 +143,7 @@ def sendStaffEmbed(banObject, serverObject):
                         },
                         {
                         "name": "Steam Links",
-                        "value": "\n\u200b{} Profile: [{}](https://steamcommunity.com/profiles/{})".format(config.steam_Emoji, banObject['steamID'],banObject['steamID']),
+                        "value": f"\n\u200b{config.steam_Emoji} Profile: {banned_player_profile}",
                         "inline": True
                         },
                         {

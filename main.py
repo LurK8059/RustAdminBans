@@ -68,24 +68,30 @@ async def track_bans():
                         else:
                             banObject = {}
                             banObject['playerName'] = (ban['meta']['player'][:150] + ' (truncated)') if len(ban['meta']['player']) > 150 else ban['meta']['player']
+                            
                             for identifier in ban['attributes']['identifiers']:
-                                if identifier['type'] == "steamID":
+                                if identifier['type'] == config.rust_identifier:
                                     banObject['steamID'] = identifier['identifier']
                                     if not (identifier.get('metadata') is None):
                                         banObject['avatar'] = identifier['metadata']['profile']['avatarmedium']
                                     else:
-                                        banObject['avatar'] = "https://i.gyazo.com/2b4181769d85f5adb53694bf156d665c.png"
+                                        banObject['avatar'] = config.steam_error_avatar
+                                elif identifier['type'] == config.arma_reforger_identifier:
+                                    banObject['avatar'] = config.arma_reforger_logo
+
                             banObject['reason'] = (ban['attributes']['reason'][:2000] + ' (truncated)') if len(ban['attributes']['reason']) > 2000 else ban['attributes']['reason']
                             banObject['reason'] = banObject['reason'].replace("{", "⁍").replace("}", "⁍")
                             banObject['reason'] = banObject['reason'].replace("⁍⁍timeLeft⁍⁍", "").replace("⁍⁍duration⁍⁍", "")
+                            
                             if ban['attributes']['expires'] == None:
-                                banObject['banLength'] = "Never - Perm Banned"
+                                banObject['banLength'] = config.perm_banned
                             else:
                                 banLength = time.strptime(
                                     ban['attributes']['expires'], "%Y-%m-%dT%H:%M:%S.%fZ")
                                 banLength = time.mktime(banLength)
                                 banObject['banLength'] = datetime.utcfromtimestamp(
                                     banLength).strftime('%a %b %d %Y')
+
                             banObject['banid'] = ban['id']
                             banObject['playerDataID'] = ban['relationships']['player']['data']['id']
                             note = ban['attributes']['note']
