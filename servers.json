@@ -11,6 +11,7 @@
 		],
 		"embedSettings": {
 			"minifyEmbed": true,
+			"useSteamID": true,
 			"EmbedBotName": "My Rust Server Bans",
 			"EmbedAvatar": "https://imgur.com/WeXGthm.png"
 		},
@@ -28,6 +29,7 @@
 		],
 		"embedSettings": {
 			"minifyEmbed": true,
+			"useSteamID": true,
 			"EmbedBotName": "My Rust Server Bans",
 			"EmbedAvatar": "https://imgur.com/gCPIwr9.png"
 		},

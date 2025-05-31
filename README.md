@@ -17,6 +17,12 @@ The dependencies needed to get your bot online are stated in the main.py. You ca
 - requests==2.25.1
 - aiohttp==3.9.5
 
+### Servers.json "useSteamID" variable
+This variable is responsible for changing the final embed that is handled in messageHandler.py
+Specifically for games like Arma Reforger, we're unable to get any Steam data from the Battlemetrics ban. This means were unable to use the standard embed format that links their Steam profile, and Steam 64 ID.
+
+Setting this variable to False, will mean you will change the "banned_player_profile" variable in your messageHandler.py file.
+
 ### For any further support or enquires join:
 - [discord.lone.design](https://discord.lone.design/)
 - [discord.platformsync.io](https://discord.platformsync.io/)
