@@ -78,7 +78,8 @@ async def track_bans():
                                         banObject['avatar'] = config.steam_error_avatar
                                 elif identifier['type'] == config.arma_reforger_identifier:
                                     banObject['avatar'] = config.arma_reforger_logo
-
+                                    banObject['steamID'] = "You must set your servers.json \"useSteamID\" to false - See Readme.md"
+                            
                             banObject['reason'] = (ban['attributes']['reason'][:2000] + ' (truncated)') if len(ban['attributes']['reason']) > 2000 else ban['attributes']['reason']
                             banObject['reason'] = banObject['reason'].replace("{", "⁍").replace("}", "⁍")
                             banObject['reason'] = banObject['reason'].replace("⁍⁍timeLeft⁍⁍", "").replace("⁍⁍duration⁍⁍", "")

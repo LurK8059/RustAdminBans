@@ -6,7 +6,7 @@ discord_token = 'Your Discord Bot Token goes here'
 # Find that in https://discord.com/developers/applications
 
 ### Player Identifier Type ###
-rust_identifier = "steamid"
+rust_identifier = "steamID"
 arma_reforger_identifier = "reforgerUUID"
 # More can be found here under the "attributes:type": https://www.battlemetrics.com/developers/documentation#resource-identifier
 
